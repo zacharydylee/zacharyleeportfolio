@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>YOUR NAME — Actor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       CSS VARIABLES — Edit colors, fonts, spacing here
+    ============================================================ */
+    :root {
+      --color-bg:        #0d0c0b;
+      --color-surface:   #161412;
+      --color-border:    #2a2620;
+      --color-text:      #e8e0d4;
+      --color-muted:     #7a7268;
+      --color-accent:    #c9a96e;
+      --color-accent2:   #8b5e3c;
+      --font-display:    'Cormorant Garamond', Georgia, serif;
+      --font-body:       'Jost', sans-serif;
+      --nav-height:      70px;
+      --max-w:           1200px;
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+    /* ============================================================
+       NAVIGATION
+    ============================================================ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: var(--nav-height);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px;
+      background: linear-gradient(to bottom, rgba(13,12,11,0.95) 0%, rgba(13,12,11,0) 100%);
+      transition: background 0.4s;
+    }
+    nav.scrolled { background: rgba(13,12,11,0.97); border-bottom: 1px solid var(--color-border); }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: var(--color-accent);
+    }
+    /* ---- EDIT: Update your name in the nav logo below ---- */
+
+    .nav-links {
+      display: flex; gap: 40px; list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      transition: color 0.25s;
+      position: relative;
+      padding-bottom: 4px;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0;
+      width: 0; height: 1px;
+      background: var(--color-accent);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover { color: var(--color-text); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
+    .nav-hamburger span { width: 24px; height: 1px; background: var(--color-text); transition: all 0.3s; }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
+    #home {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 4px;
+      padding-top: var(--nav-height);
+      position: relative;
+    }
+
+    .hero-col {
+      position: relative;
+      overflow: hidden;
+      /* ---- EDIT: Replace background-image URLs with your own photos ---- */
+    }
+    .hero-col:nth-child(1) { background-image: url('https://images.unsplash.com/photo-1516914589923-f105f1535f88?w=800&q=80'); background-size: cover; background-position: center; min-height: 80vh; }
+    .hero-col:nth-child(2) { background-image: url('https://images.unsplash.com/photo-1542204165-65bf26472b9b?w=800&q=80'); background-size: cover; background-position: center top; }
+    .hero-col:nth-child(3) { background-image: url('https://images.unsplash.com/photo-1489516408517-0c0a15662682?w=800&q=80'); background-size: cover; background-position: center; }
+
+    .hero-col::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(13,12,11,0.1) 0%, rgba(13,12,11,0.4) 100%);
+    }
+
+    .hero-title-block {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      z-index: 10;
+      padding: 60px 48px;
+      grid-column: 1 / -1;
+      /* spans under the grid — see below */
+    }
+
+    /* Overlay title across all three columns */
+    #home-title-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      z-index: 20;
+      padding: 0 48px 56px;
+      pointer-events: none;
+    }
+    #home-title-overlay h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      color: var(--color-text);
+      text-shadow: 0 2px 40px rgba(0,0,0,0.7);
+    }
+    #home-title-overlay .hero-subtitle {
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-top: 10px;
+      text-shadow: 0 1px 12px rgba(0,0,0,0.8);
+    }
+
+    /* ============================================================
+       SECTION BASE
+    ============================================================ */
+    section { padding: 100px 48px; }
+    .section-inner { max-width: var(--max-w); margin: 0 auto; }
+
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 4vw, 3.8rem);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+    .section-body {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--color-muted);
+      max-width: 580px;
+      line-height: 1.9;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 36px;
+      padding: 12px 32px;
+      border: 1px solid var(--color-accent);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      transition: all 0.3s;
+    }
+    .btn:hover { background: var(--color-accent); color: var(--color-bg); }
+
+    /* ============================================================
+       ABOUT / BIO
+    ============================================================ */
+    #about { background: var(--color-surface); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .about-images {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .about-img-main {
+      grid-column: 1 / -1;
+      height: 320px;
+      overflow: hidden;
+      /* ---- EDIT: Replace with your own photo URL ---- */
+    }
+    .about-img-main img { object-position: top center; transition: transform 0.6s ease; }
+    .about-img-main:hover img { transform: scale(1.03); }
+    .about-img-sm {
+      height: 200px;
+      overflow: hidden;
+    }
+    .about-img-sm img { transition: transform 0.6s ease; }
+    .about-img-sm:hover img { transform: scale(1.03); }
+
+    /* ---- EDIT: Replace src values with your own photos ---- */
+
+    /* ============================================================
+       TV & FILM
+    ============================================================ */
+    #tvfilm { }
+    .projects-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .project-card {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 2/3;
+      cursor: pointer;
+      background: var(--color-surface);
+    }
+    .project-card img { transition: transform 0.7s ease; }
+    .project-card:hover img { transform: scale(1.06); }
+    .project-card-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 55%);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 24px;
+      opacity: 0;
+      transition: opacity 0.35s;
+    }
+    .project-card:hover .project-card-overlay { opacity: 1; }
+    .project-card-title {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 400;
+      line-height: 1.2;
+    }
+    .project-card-role {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-top: 4px;
+    }
+    .project-card-year {
+      font-size: 0.68rem;
+      color: var(--color-muted);
+      margin-top: 2px;
+    }
+
+    /* ---- EDIT: Replace project images, titles, roles & years below in HTML ---- */
+
+    /* ============================================================
+       REEL / VIDEO
+    ============================================================ */
+    #reel { background: var(--color-surface); }
+    .reel-inner { max-width: var(--max-w); margin: 0 auto; }
+    .reel-video-wrap {
+      position: relative;
+      margin-top: 48px;
+      aspect-ratio: 16/9;
+      background: #000;
+      overflow: hidden;
+    }
+    .reel-video-wrap iframe {
+      width: 100%; height: 100%;
+      border: none;
+      position: absolute; inset: 0;
+    }
+    /* ---- EDIT: Replace YouTube embed URL in the iframe src below ---- */
+
+    /* ============================================================
+       PRESS
+    ============================================================ */
+    #press { }
+    .press-grid {
+      margin-top: 48px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .press-card {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 4/5;
+      background: var(--color-surface);
+    }
+    .press-card img { transition: transform 0.6s ease; }
+    .press-card:hover img { transform: scale(1.04); }
+    .press-card-info {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 20px;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+    }
+    .press-card-pub {
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+    }
+    .press-card-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 400;
+      margin-top: 4px;
+    }
+    /* ---- EDIT: Replace press images, publication names, and article titles below ---- */
+
+    /* ============================================================
+       CONTACT
+    ============================================================ */
+    #contact { background: var(--color-surface); }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .contact-form { display: flex; flex-direction: column; gap: 16px; margin-top: 32px; }
+    .contact-form input,
+    .contact-form textarea {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--color-border);
+      padding: 12px 0;
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 300;
+      outline: none;
+      transition: border-color 0.3s;
+      resize: none;
+    }
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder { color: var(--color-muted); }
+    .contact-form input:focus,
+    .contact-form textarea:focus { border-color: var(--color-accent); }
+    .contact-form textarea { min-height: 120px; }
+    .contact-socials { margin-top: 48px; display: flex; gap: 28px; }
+    .contact-socials a {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      transition: color 0.25s;
+    }
+    .contact-socials a:hover { color: var(--color-accent); }
+    /* ---- EDIT: Replace social links in HTML below ---- */
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      padding: 32px 48px;
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer p {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      color: var(--color-muted);
+    }
+    footer .footer-logo {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      color: var(--color-accent);
+      letter-spacing: 0.08em;
+    }
+
+    /* ============================================================
+       FADE-IN ANIMATION
+    ============================================================ */
+    .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-in.visible { opacity: 1; transform: none; }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 900px) {
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      .nav-links.open {
+        display: flex; flex-direction: column; gap: 20px;
+        position: fixed; inset: 0; background: var(--color-bg);
+        justify-content: center; align-items: center;
+        z-index: 99;
+        font-size: 1.1rem;
+      }
+      .nav-hamburger { display: flex; z-index: 101; }
+      section { padding: 72px 24px; }
+      #home { grid-template-columns: 1fr; }
+      .hero-col:nth-child(2), .hero-col:nth-child(3) { display: none; }
+      .hero-col:nth-child(1) { min-height: 100vh; }
+      #home-title-overlay { padding: 0 24px 48px; }
+      .about-grid,
+      .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+      .projects-grid { grid-template-columns: 1fr 1fr; }
+      .press-grid { grid-template-columns: 1fr 1fr; }
+      footer { flex-direction: column; gap: 12px; text-align: center; }
+    }
+    @media (max-width: 600px) {
+      .projects-grid { grid-template-columns: 1fr; }
+      .press-grid { grid-template-columns: 1fr; }
+      .about-images { grid-template-columns: 1fr; }
+      .about-img-main { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       NAVIGATION
+       EDIT: Update "YOUR NAME" and links throughout
+  ============================================================ -->
+  <nav id="main-nav">
+    <a href="#home" class="nav-logo">YOUR NAME</a><!-- ← EDIT YOUR NAME -->
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">Biography</a></li>
+      <li><a href="#tvfilm">TV &amp; Film</a></li>
+      <li><a href="#reel">Reel</a></li>
+      <li><a href="#press">Press</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       HERO / HOME
+       EDIT: Replace the background-image URLs on .hero-col in CSS above
+             OR add inline style="background-image:url('your-photo.jpg')"
+             to each .hero-col below.
+  ============================================================ -->
+  <section id="home">
+    <div class="hero-col"
+         style="background-image:url('https://images.unsplash.com/photo-1516914589923-f105f1535f88?w=900&q=80');">
+      <!-- ← EDIT: Replace URL with your headshot / photo 1 -->
+    </div>
+    <div class="hero-col"
+         style="background-image:url('https://images.unsplash.com/photo-1542204165-65bf26472b9b?w=900&q=80');">
+      <!-- ← EDIT: Replace URL with your photo 2 -->
+    </div>
+    <div class="hero-col"
+         style="background-image:url('https://images.unsplash.com/photo-1489516408517-0c0a15662682?w=900&q=80');">
+      <!-- ← EDIT: Replace URL with your photo 3 -->
+    </div>
+  </section>
+
+  <div id="home-title-overlay">
+    <p class="hero-subtitle">Actor &amp; Performer</p><!-- ← EDIT YOUR TAGLINE -->
+    <h1>YOUR NAME</h1><!-- ← EDIT YOUR NAME -->
+  </div>
+
+
+  <!-- ============================================================
+       ABOUT / BIOGRAPHY
+       EDIT: Update the bio text, credits, and photo URLs
+  ============================================================ -->
+  <section id="about">
+    <div class="section-inner about-grid fade-in">
+
+      <div class="about-images">
+        <div class="about-img-main">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80"
+               alt="YOUR NAME — headshot"
+               loading="lazy">
+          <!-- ← EDIT: Replace with your primary headshot -->
+        </div>
+        <div class="about-img-sm">
+          <img src="https://images.unsplash.com/photo-1474631245212-32dc3c8310c6?w=600&q=80"
+               alt="On set"
+               loading="lazy">
+          <!-- ← EDIT: Replace with your BTS / on-set photo -->
+        </div>
+        <div class="about-img-sm">
+          <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&q=80"
+               alt="Performing"
+               loading="lazy">
+          <!-- ← EDIT: Replace with another photo of your choice -->
+        </div>
+      </div>
+
+      <div>
+        <p class="section-label">Biography</p>
+        <h2 class="section-title">About<br><em>YOUR NAME</em></h2><!-- ← EDIT -->
+        <p class="section-body">
+          <!-- ← EDIT: Write your bio here -->
+          YOUR NAME is an actor based in Los Angeles, California, with a passion for
+          character-driven storytelling. Known for nuanced performances across stage and
+          screen, they bring depth and authenticity to every role.
+        </p>
+        <p class="section-body" style="margin-top:16px;">
+          <!-- ← EDIT: Add more bio details, training, or credits here -->
+          Trained at [YOUR TRAINING / SCHOOL], YOUR NAME has appeared in [NOTABLE PROJECT]
+          and continues to pursue work that challenges and inspires audiences.
+        </p>
+        <a href="#contact" class="btn">Get in Touch</a>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       TV & FILM
+       EDIT: Replace each project card's image, title, role, and year.
+             Add or remove .project-card blocks as needed.
+  ============================================================ -->
+  <section id="tvfilm">
+    <div class="section-inner">
+      <div class="projects-header fade-in">
+        <div>
+          <p class="section-label">Portfolio</p>
+          <h2 class="section-title">TV &amp; Film</h2>
+        </div>
+      </div>
+
+      <div class="projects-grid">
+
+        <!-- PROJECT 1 — EDIT below -->
+        <div class="project-card fade-in">
+          <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?w=600&q=80"
+               alt="Project Title 1"
+               loading="lazy">
+          <!-- ↑ EDIT: Replace with your project's poster or still image -->
+          <div class="project-card-overlay">
+            <p class="project-card-title">Project Title</p><!-- ← EDIT -->
+            <p class="project-card-role">Character Name</p><!-- ← EDIT -->
+            <p class="project-card-year">2024 · Feature Film</p><!-- ← EDIT -->
+          </div>
+        </div>
+
+        <!-- PROJECT 2 — EDIT below -->
+        <div class="project-card fade-in">
+          <img src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=600&q=80"
+               alt="Project Title 2"
+               loading="lazy">
+          <!-- ↑ EDIT: Replace with your project's poster or still image -->
+          <div class="project-card-overlay">
+            <p class="project-card-title">Project Title</p><!-- ← EDIT -->
+            <p class="project-card-role">Character Name</p><!-- ← EDIT -->
+            <p class="project-card-year">2023 · TV Series</p><!-- ← EDIT -->
+          </div>
+        </div>
+
+        <!-- PROJECT 3 — EDIT below -->
+        <div class="project-card fade-in">
+          <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=600&q=80"
+               alt="Project Title 3"
+               loading="lazy">
+          <!-- ↑ EDIT: Replace with your project's poster or still image -->
+          <div class="project-card-overlay">
+            <p class="project-card-title">Project Title</p><!-- ← EDIT -->
+            <p class="project-card-role">Character Name</p><!-- ← EDIT -->
+            <p class="project-card-year">2023 · Short Film</p><!-- ← EDIT -->
+          </div>
+        </div>
+
+        <!-- PROJECT 4 — EDIT below -->
+        <div class="project-card fade-in">
+          <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=600&q=80"
+               alt="Project Title 4"
+               loading="lazy">
+          <div class="project-card-overlay">
+            <p class="project-card-title">Project Title</p><!-- ← EDIT -->
+            <p class="project-card-role">Character Name</p><!-- ← EDIT -->
+            <p class="project-card-year">2022 · Feature Film</p><!-- ← EDIT -->
+          </div>
+        </div>
+
+        <!-- PROJECT 5 — EDIT below -->
+        <div class="project-card fade-in">
+          <img src="https://images.unsplash.com/photo-1616530940355-351fabd9524b?w=600&q=80"
+               alt="Project Title 5"
+               loading="lazy">
+          <div class="project-card-overlay">
+            <p class="project-card-title">Project Title</p><!-- ← EDIT -->
+            <p class="project-card-role">Character Name</p><!-- ← EDIT -->
+            <p class="project-card-year">2022 · TV Movie</p><!-- ← EDIT -->
+          </div>
+        </div>
+
+        <!-- PROJECT 6 — EDIT below -->
+        <div class="project-card fade-in">
+          <img src="https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?w=600&q=80"
+               alt="Project Title 6"
+               loading="lazy">
+          <div class="project-card-overlay">
+            <p class="project-card-title">Project Title</p><!-- ← EDIT -->
+            <p class="project-card-role">Character Name</p><!-- ← EDIT -->
+            <p class="project-card-year">2021 · Short Film</p><!-- ← EDIT -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       DEMO REEL
+       EDIT: Replace the YouTube embed URL with your own reel URL.
+             Format: https://www.youtube.com/embed/YOUR_VIDEO_ID
+  ============================================================ -->
+  <section id="reel">
+    <div class="reel-inner">
+      <div class="fade-in">
+        <p class="section-label">Watch</p>
+        <h2 class="section-title">Demo Reel</h2>
+        <p class="section-body">
+          A curated selection of performances showcasing range, versatility, and craft.
+          <!-- ← EDIT: Update this description -->
+        </p>
+      </div>
+      <div class="reel-video-wrap fade-in">
+        <!-- ← EDIT: Replace VIDEO_ID with your YouTube video ID -->
+        <iframe
+          src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+          title="Demo Reel — YOUR NAME"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       PRESS
+       EDIT: Replace press card images, publication names, and article titles.
+             Wrap .press-card in an <a href="ARTICLE_URL"> to link to articles.
+  ============================================================ -->
+  <section id="press">
+    <div class="section-inner">
+      <div class="fade-in">
+        <p class="section-label">Coverage</p>
+        <h2 class="section-title">Press</h2>
+        <p class="section-body">
+          Recent features, interviews, and media appearances.
+          <!-- ← EDIT: Update if desired -->
+        </p>
+      </div>
+
+      <div class="press-grid">
+
+        <!-- PRESS ITEM 1 — EDIT below -->
+        <div class="press-card fade-in">
+          <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80"
+               alt="Press feature 1"
+               loading="lazy">
+          <!-- ↑ EDIT: Replace with your press photo / magazine cover -->
+          <div class="press-card-info">
+            <p class="press-card-pub">Publication Name</p><!-- ← EDIT -->
+            <p class="press-card-title">"Article Headline Here"</p><!-- ← EDIT -->
+          </div>
+        </div>
+
+        <!-- PRESS ITEM 2 — EDIT below -->
+        <div class="press-card fade-in">
+          <img src="https://images.unsplash.com/photo-1543269664-76bc3997d9ea?w=600&q=80"
+               alt="Press feature 2"
+               loading="lazy">
+          <div class="press-card-info">
+            <p class="press-card-pub">Publication Name</p><!-- ← EDIT -->
+            <p class="press-card-title">"Article Headline Here"</p><!-- ← EDIT -->
+          </div>
+        </div>
+
+        <!-- PRESS ITEM 3 — EDIT below -->
+        <div class="press-card fade-in">
+          <img src="https://images.unsplash.com/photo-1495020689067-958852a7765e?w=600&q=80"
+               alt="Press feature 3"
+               loading="lazy">
+          <div class="press-card-info">
+            <p class="press-card-pub">Publication Name</p><!-- ← EDIT -->
+            <p class="press-card-title">"Article Headline Here"</p><!-- ← EDIT -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       CONTACT
+       EDIT: Update social links and the contact email in the form action.
+             For a working form, connect to Formspree or Netlify Forms.
+  ============================================================ -->
+  <section id="contact">
+    <div class="section-inner contact-grid">
+
+      <div class="fade-in">
+        <p class="section-label">Get in Touch</p>
+        <h2 class="section-title">Contact<br><em>The Team</em></h2>
+        <p class="section-body">
+          For representation, casting inquiries, press, and collaborations,
+          please reach out using the form or directly below.
+          <!-- ← EDIT: Update as needed -->
+        </p>
+        <p class="section-body" style="margin-top:12px; color: var(--color-accent);">
+          management@youremail.com<!-- ← EDIT: Your contact email -->
+        </p>
+        <div class="contact-socials">
+          <a href="https://www.imdb.com" target="_blank">IMDb</a><!-- ← EDIT: your IMDB link -->
+          <a href="https://www.instagram.com" target="_blank">Instagram</a><!-- ← EDIT -->
+          <a href="https://www.tiktok.com" target="_blank">TikTok</a><!-- ← EDIT -->
+          <a href="https://www.twitter.com" target="_blank">X</a><!-- ← EDIT -->
+        </div>
+      </div>
+
+      <div class="fade-in">
+        <!-- For a working form: replace action="#" with your Formspree URL  -->
+        <!-- e.g. action="https://formspree.io/f/YOUR_FORM_ID"               -->
+        <form class="contact-form" action="#" method="POST">
+          <input type="text"  name="name"    placeholder="Your Name"    required>
+          <input type="email" name="email"   placeholder="Your Email"   required>
+          <input type="text"  name="subject" placeholder="Subject">
+          <textarea           name="message" placeholder="Your Message" required></textarea>
+          <button type="submit" class="btn" style="cursor:pointer; font-family:var(--font-body); border:none; border: 1px solid var(--color-accent); background:transparent;">
+            Send Message
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       FOOTER
+       EDIT: Update name and year
+  ============================================================ -->
+  <footer>
+    <span class="footer-logo">YOUR NAME</span><!-- ← EDIT -->
+    <p>© 2025 YOUR NAME. All rights reserved.</p><!-- ← EDIT -->
+  </footer>
+
+
+  <!-- ============================================================
+       JAVASCRIPT — scroll effects, nav behaviour, hamburger menu
+  ============================================================ -->
+  <script>
+    // Sticky nav on scroll
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Hamburger menu
+    const hamburger = document.getElementById('hamburger');
+    const navLinks  = document.getElementById('nav-links');
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+      const spans = hamburger.querySelectorAll('span');
+      if (navLinks.classList.contains('open')) {
+        spans[0].style.transform = 'rotate(45deg) translate(4px, 4px)';
+        spans[1].style.opacity   = '0';
+        spans[2].style.transform = 'rotate(-45deg) translate(4px, -4px)';
+      } else {
+        spans[0].style.transform = '';
+        spans[1].style.opacity   = '';
+        spans[2].style.transform = '';
+      }
+    });
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      hamburger.querySelectorAll('span').forEach(s => { s.style.transform=''; s.style.opacity=''; });
+    }));
+
+    // Fade-in on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Hero title stays above the grid
+    function positionHeroTitle() {
+      const overlay = document.getElementById('home-title-overlay');
+      const section = document.getElementById('home');
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      overlay.style.top  = (section.offsetTop) + 'px';
+      overlay.style.height = section.offsetHeight + 'px';
+    }
+    positionHeroTitle();
+    window.addEventListener('resize', positionHeroTitle);
+  </script>
+
+</body>
+</html>
